@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>d3.js with leaflet.js</title>
+
+    <link rel="stylesheet"  href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"/>
+<style>
+.circle{
+stroke:black;
+    opacity: .6;
+         fill: red
+}
+.line{
+stroke:red;
+    stroke-width: 1;
+    stroke: red;
+    fill:none;
+     opacity: .3;
+         
+}
+    </style>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <script
+        src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+    
+</head>
+<body>
+
+    <div id="map" style="width: 100%; height: 800px"></div>
+
+    <script type="text/javascript">
+	
+        var map = L.map('map').setView([27.99529, 120.64653], 13);
+        mapLink = 
+            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+        L.tileLayer(
+            'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+            attribution: '&copy; ' + mapLink + ' Contributors',
+            maxZoom: 18,
+            id: 'mapbox.streets'
+            }).addTo(map);
+ 
+    // Initialize the SVG layer
+    map._initPathRoot()    
+
+    // We pick up the SVG from the map object
+    var svg = d3.select("#map").select("svg"),
+    g = svg.append("g");
+	 var lineFunction = d3.svg.line()
+            .x(function(d) {
+               return map.latLngToLayerPoint(d.LatLng).x;
+            })
+            .y(function(d) {
+               return map.latLngToLayerPoint(d.LatLng).y;
+            })
+            .interpolate("linear");  
+    d3.json("phone.json", function(collection) {
+       
+         // Add a LatLng object to each item in the dataset
+        collection.forEach(function(d) {
+            d.LatLng = new L.LatLng(d.aLatitude,
+                                    d.aLongitude)
+        })
+		var path1 = g.append("path")
+                .attr("d", lineFunction(collection))
+                .attr("class","line");
+        var feature = g.selectAll("circle")
+            .data(collection)
+            .enter().append("circle")
+            .attr("class","circle")
+            .attr("r", 5);  
+		
+        map.on("viewreset", update);
+        update();
+
+        function update() {
+            feature.attr("transform", 
+            function(d) { 
+                return "translate("+ 
+                    map.latLngToLayerPoint(d.LatLng).x +","+ 
+                    map.latLngToLayerPoint(d.LatLng).y +")";
+                }
+            )
+            g.selectAll("path").remove();
+            var path1 = g.append("path")
+                .attr("d", lineFunction(collection))
+                .attr("class","line");
+
+        }
+    })			 
+</script>
+</body>
+</html>

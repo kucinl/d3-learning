@@ -1,0 +1,12 @@
+{
+  "name": "d3-learning",
+  "private": "true",
+  "devDependencies": {},
+  "dependencies": {
+    "semantic": "^2.2.2",
+    "jquery": "^3.1.0",
+    "d3": "3.4.13",
+    "d3-queue": "^3.0.1",
+    "leaflet": "^0.7.7"
+  }
+}

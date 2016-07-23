@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" >
+    <script type="text/javascript" src="../lib/d3/d3.min.js" ></script>
+    <style type="text/css">
+        .state {
+            fill: gray;
+        }
+
+    </style>
+</head>
+
+<body>
+    <script src="../lib/d3-queue/d3-queue.js" ></script>
+
+    <script>
+        var width = 960,
+            height = 500;
+		var zoom = d3.behavior.zoom()
+					.scaleExtent([1, 1000])
+					.on("zoom", zoomed);
+		function zoomed() {
+			d3.select(".citys").attr("transform", 
+				"translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+            d3.select(".states").attr("transform", 
+				"translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+		}
+        // 设置svg属性，并添加第一个孩子g
+        var svg = d3.select("body").append("svg").call(zoom)
+                        .attr("width", width)
+                        .attr("height", height);
+        var groups = svg.append("g").attr("class", "states");
+        var g = svg.append("g").attr("class", "citys");
+
+        // 定义地图的投影
+        var projection = d3.geo.mercator()
+      .center([120.64653,27.99529])
+                            .scale(15000)
+                            .translate([width / 2, height / 2]);
+
+        // 定义地理路径生成器
+        var path = d3.geo.path()
+                    .projection(projection);
+
+        // 设置颜色比例尺
+        var colorA = d3.hsl(60,1.0,0.5);        // 红色
+        var colorB = d3.hsl(60,0.1,0.5);        // 白色
+var color = d3.scale.category20();
+
+        // computeColor(i)，i为0~1，输出colorA、colorB之间的数
+        var computeColor = d3.interpolate(colorB,colorA);    
+        var compute = d3.scale.linear()  
+                            .domain([0, 1.8])
+                            .range([0, 1]);
+
+        var conputeR = d3.scale.log()  
+                            .domain([300000, 9000000])
+                            .range([0, 10]);
+      var lineFunction = d3.svg.line()
+            .x(function(d) {
+                return projection([d.aLongitude,d.aLatitude])[0];
+            })
+            .y(function(d) {
+                return projection([d.aLongitude,d.aLatitude])[1];
+            })
+            .interpolate("linear");  
+        d3.queue()
+            .defer(d3.json, "wz.json")
+            .defer(d3.json, "phone.json")
+     //       .defer(d3.csv, "cities.csv")
+            .await(ready);
+
+        
+        function ready(error, states,phones){
+              
+               var path1 = g.append("path")
+                .attr("d", lineFunction(phones))
+                .attr("stroke", "blue")
+                .attr("stroke-width", .02)
+                .attr("fill", "none")
+            var phone = g.selectAll(".city")
+                            .data(phones)
+                            .enter()
+                            .append("g")
+                                .attr("class", "city")
+                                .attr("transform", function(d, i){
+                                    //
+                                   var coor = projection([d.aLongitude, d.aLatitude]);
+                                    return "translate("+coor[0]+", "+coor[1]+")";
+                                });
+            phone.append("circle")
+                    .attr("r", function(d, i){
+                        return d.dura/10000+0.1;
+                    })
+                    .style("fill" , "white");
+
+            var state = groups.selectAll("path")
+                .data( states.features )        // 对每一个数据绑定一个path
+                .enter()
+                .append("path")        // 对每一个数据绑定一个path
+                    .attr("d", path)
+                    .attr("class", "state")
+                    .style("fill", function(d, i){
+                    //     c = cities;
+                   /*     var temp_n=1.2;
+                        for (var j = 0; j < productivity.length; j++){
+                            if (d.properties.name == productivity[j].state){
+                                temp_n = productivity[j].value;
+                                break;
+                            }
+                        }
+                        var m = compute(temp_n); 
+                        return computeColor(m);*/
+                        return color(i);
+                    }).on("mouseover",function(d,i){
+                    d3.select(this)
+                       .style("fill","black");
+                })
+                .on("mouseout",function(d,i){
+                    d3.select(this)
+                       .style("fill",color(i));
+                });
+        
+        } // function ready END!
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "d3",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "lite-server --config=liteserver-config.json"
+  },
+  "author": "kucin",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.2.2"
+  }
+}
