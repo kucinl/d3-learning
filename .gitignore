@@ -37,3 +37,4 @@ lib
 .node_repl_history
 #
 .bak
+!lib/pace
