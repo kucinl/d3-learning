@@ -24,6 +24,9 @@ L.mapbox.accessToken = 'pk.eyJ1Ijoia3VjaW4iLCJhIjoiY2lxemNleWR6MDI4ZGZta3FsY3Zmb
 var map = L.mapbox.map('map', 'mapbox.streets');
 paceOptions = {
   document: false, // disabled
+  ajax: {
+        trackWebSockets: false
+    }
 };
 </script>
 <script src="/lib/pace/pace.js"></script>
