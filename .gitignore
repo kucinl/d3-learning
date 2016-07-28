@@ -30,7 +30,6 @@ build/Release
 node_modules
 jspm_packages
 /lib/
-!lib/pace
 # Optional npm cache directory
 .npm
 
@@ -38,4 +37,6 @@ jspm_packages
 .node_repl_history
 #
 .bak
+!lib/pace
+-*
 
