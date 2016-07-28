@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset=utf-8 />
+  <title>D3 OSM</title>
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+    
+    svg {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+  <script>
+    paceOptions = {
+      document: false, // disabled
+      ajax: {
+        trackWebSockets: false
+      }
+    };
+  </script>
+  <script src="/lib/pace/pace.js"></script>
+  <link href="/lib/pace/themes/red/pace-theme-flash.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="map"></div>
+  <script type="text/javascript" src="../lib/d3/d3.min.js"></script>
+  <script src="../lib/d3-queue/d3-queue.js"></script>
+  <script src='d3-osm.js'></script>
+  <script>
+    'use strict';
+    var width = 960,
+      height = 500;
+    var osm;
+    var lines = [];
+    var projection = d3.geo.mercator().center([120.64653, 27.99529])
+      .scale(150000)
+      .translate([width / 2, height / 2]);
+    var zoom = d3.behavior.zoom()
+      .scaleExtent([0.01, 100000])
+      .on("zoom", zoomed);
+
+    function zoomed() {
+      d3.selectAll(".group").attr("transform",
+        "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      d3.selectAll(".points").attr("transform",
+        "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      //       osm.zoom(d3.event.scale)
+    }
+    var svg = d3.select("#map").call(zoom).append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    var clip = svg.append("defs").append("clipPath").attr("id","clipPath");
+    var g = svg.append("g")
+            .attr("class", "group")
+            .attr("clip-path","url(#clipPath)");
+    var g2 = svg.append("g").attr("class", "points");
+    var color = d3.scale.category20();
+    var lineFunction = d3.svg.line()
+      .x(function(d) {
+        return projection([d.position.lng, d.position.lat])[0];
+      })
+      .y(function(d) {
+        return projection([d.position.lng, d.position.lat])[1];
+      })
+      .interpolate("linear");
+    d3.queue()
+      .defer(d3.json, "trajectory.json")
+      .defer(d3.xml, "map.osm", "application/xml")
+      .await(ready);
+
+    function ready(error, points, xml) {
+      lines = dataFormat(points)
+      osm = d3.osm(xml).addTo(g);
+      drawLine(lines);
+    }
+
+    function drawLine(lines) {
+      for (var lineOrder in lines) {
+        //draw lines between points
+        g2.append('g')
+          .append("path")
+          .attr("d", lineFunction(lines[lineOrder]))
+          .attr("stroke", "red")
+          .attr("opacity", .5)
+          .attr("stroke-width", .5)
+          .attr("fill", "none")
+          .attr("class", "line");
+        //draw points to show the position of the stay of a person
+        g2.selectAll('point')
+          .data(lines[lineOrder])
+          .enter()
+          .append('g')
+          .append('circle')
+          .attr('class', 'point')
+          .attr('cx', lineFunction.x())
+          .attr('cy', lineFunction.y())
+          .attr('fill', "red")
+          .attr("opacity", .5)
+          .attr('r', 2);
+          //set clippath
+        clip.selectAll('clipcircle')
+          .data(lines[lineOrder])
+          .enter()
+          .append('circle')
+          .attr('cx', lineFunction.x())
+          .attr('cy', lineFunction.y())
+          .attr('r', 10)
+      }
+    }
+
+    function dataFormat(olds) {
+      var minute = 1000 * 60,
+        hour = minute * 60,
+        day = hour * 24;
+      var points = [];
+      var newPoint;
+      var lastDay = 0;
+      var lines = [],
+        line = [];
+      for (var i in olds) {
+        points = points.concat(olds[i]);
+      }
+      for (var i in points) {
+        var point = points[i];
+        var start = new Date(point.startTime.replace(" ", "T")).getTime(),
+          end = new Date(point.endTime.replace(" ", "T")).getTime(),
+          days = Math.round(start / day);
+        var stay = end - start;
+        if (stay　 >= 60 * 30 * 1000) {
+          if (days > lastDay) {
+            lastDay = days;
+            line = [];
+            lines.push(line);
+          }
+          var position = _quadStrToGeoQuad(point.quadCode)
+          newPoint = {
+            startTime: start,
+            endTime: end,
+            position: {
+              lat: position[0],
+              lng: position[1]
+            }
+          }
+          line.push(newPoint);
+        }
+      }
+      return lines;
+    }
+
+    function _quadStrToGeoQuad(quadStr, maxLat, minLat, maxLng, minLng) {
+      //use global variables
+
+      var maxLatitude = 28.039,
+        minLatitude = 27.890,
+        maxLongitude = 120.876,
+        minLongitude = 120.556;
+
+      maxLat = maxLat || maxLatitude;
+      maxLng = maxLng || maxLongitude;
+      minLat = minLat || minLatitude;
+      minLng = minLng || minLongitude;
+
+      var position = [minLat, minLng];
+      for (var j in quadStr) {
+        var quadChar = quadStr[j],
+          offsetLat = (maxLat - minLat) / 2,
+          offsetLng = (maxLng - minLng) / 2;
+        if (quadChar == '2' || quadChar == '3') {
+          position[0] += offsetLat;
+          minLat = minLat + offsetLat;
+        } else {
+          maxLat = minLat + offsetLat;
+        }
+        if (quadChar == '1' || quadChar == '3') {
+          position[1] += offsetLng;
+          minLng = minLng + offsetLng;
+        } else {
+          maxLng = minLng + offsetLng;
+        }
+      }
+      return position;
+    }
+  </script>
+</body>
+
+</html>
