@@ -66,8 +66,7 @@
       }
 
       for (var key in way.tags) {
-        if (this._options.areaTags.indexOf(key)>=0) {
-          console.log(key)
+        if (~this._options.areaTags.indexOf(key)) {
           return true;
         }
       }
@@ -271,3 +270,4 @@ function buildFeatures(_osm) {
   Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
+
