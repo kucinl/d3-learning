@@ -16,16 +16,20 @@
     <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/container.css">
     <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/header.css">
     <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/segment.css">
+    <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/image.css">
+    <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/button.css">
+    <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/dimmer.css">
+    <link rel="stylesheet" type="text/css" href="../lib/semantic/dist/components/accordion.css">
 
 
     <style type="text/css">
         body {
             background-color: #FFFFFF;
         }
-           
+        
         .main.container {
             margin-top: 7em;
-        }      
+        }
     </style>
 
 </head>
@@ -33,32 +37,218 @@
 <body>
     <div class="ui main text container">
         <h1 class="ui header">d3-learning contents</h1>
-        <h2 class="ui dividing header"><a href="/1/index.html">Case1</a></h2>
+        <!-- case1 start -->
+        <h2 class="ui dividing header">Case1</h2>
+
         <div class="ui raised segment">
-            <p>Using d3 and geoJson to draw a map, then draw points and line.Using <u>d3.behavior.zoom().on("zoom", zoomed)</u> to bind event.</p>
+            <p>Draw some points on a map from a json file.</p>
         </div>
 
-        <h2 class="ui dividing header"><a href="/2/index.html">Case2</a></h2>
+        <div class="ui accordion">
+            <div class="title"><i class="dropdown icon"></i> Example 1.1</div>
+            <div class="content">
+                <p>Using d3 and geoJson to draw a map, then draw points and line.Using <u>d3.behavior.zoom().on("zoom", zoomed)</u> to bind event.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/1/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/1.1.1.png">
+                </div>
+                <div class="blurring dimmable ">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/1/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/1.1.2.png">
+                </div>
+            </div>
+            <div class="title"><i class="dropdown icon"></i> Example 1.2</div>
+            <div class="content">
+                <p>Using leaflet to produce a map, then draw points and line.Using <u>map.on("viewreset", update)</u> to bind event.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/2/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/1.2.1.png">
+                </div>
+            </div>
+            <div class="title"><i class="dropdown icon"></i> Example 1.3</div>
+            <div class="content">
+                <p>Just like case 1,using the "right" zoom style,when room.Now, the width of lines(as same as the r of circle) won't change.</p>
+               <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/3/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/1.3.1.png">
+                </div>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/3/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/1.3.2.png">
+                </div>
+            </div>
+        </div>
+        <!-- case1 end -->
+        <!-- case2 start -->
+        <h2 class="ui dividing header">Case2</h2>
         <div class="ui raised segment">
-            <p>Using leaflet to produce a map, then draw points and line.Using <u>map.on("viewreset", update)</u> to bind event.</p>
+            <p>Draw the map from a osm file.</p>
         </div>
 
+        <div class="ui accordion">
+            <div class="title"><i class="dropdown icon"></i> Example 2.1</div>
+            <div class="content">
+                <p>Using mapbox (building on top of leaflet) to produce a map, then use a leaflet plugin to add a svg layer from an osm file.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/4/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/2.1.1.png">
+                </div>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/4/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/2.1.2.png">
+                </div>
+            </div>
+            <div class="title"><i class="dropdown icon"></i> Example 2.2</div>
+            <div class="content">
+                <p>Using d3 to draw a svg from an osm file.But the dealing for zoom is not satisfactory now.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/5/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/2.2.1.png">
+                </div>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/5/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/2.2.2.png">
+                </div>
+            </div>
+        </div>
+        <!-- case2 end -->
+        <!-- case3 start -->
         <h2 class="ui dividing header">Case3</h2>
         <div class="ui raised segment">
-            <p>Not available now.</p>
+           <p>Draw points and lines of a person on the map created by example2.2.</p>
         </div>
-        
-        <h2 class="ui dividing header"><a href="/4/index.html">Case4</a></h2>
-        <div class="ui raised segment">
-            <p>Using mapbox (building on top of leaflet) to produce a map, then use a leaflet plugin to add a svg layer from an osm file.</p>
-        </div>
-        
-        <h2 class="ui dividing header"><a href="/5/index.html">Case5</a></h2>
-        <div class="ui raised segment">
-            <p>Using d3 to draw a svg from an osm file.But the dealing for zoom is not satisfactory now.</p>
-        </div>
-    </div>
 
+        <div class="ui accordion">
+            <div class="title"><i class="dropdown icon"></i> Example 3.1</div>
+            <div class="content">
+                <p>Using the method just as the same as example1.1.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/6/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/3.1.1.png">
+                </div>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/6/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/3.1.2.png">
+                </div>
+            </div>
+            <div class="title"><i class="dropdown icon"></i> Example 3.2</div>
+            <div class="content">
+                <p>Adding clip.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/7/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/3.2.1.png">
+                </div>
+            </div>
+            <div class="title"><i class="dropdown icon"></i> Example 3.3</div>
+            <div class="content">
+                <p>Using the right zoom method.</p>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/8/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/3.3.1.png">
+                </div>
+                <div class="blurring dimmable">
+                    <div class="ui dimmer">
+                        <div class="content">
+                            <div class="center">
+                                <a class="ui inverted button" href="/8/index.html" >Go!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <img class="ui fluid image" src="/assets/image/3.3.2.png">
+                </div>
+            </div>
+        </div>
+        <!-- case3 end -->
+    </div>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/semantic/dist/components/accordion.min.js"></script>
+    <script src="/lib/semantic/dist/components/dimmer.min.js"></script>
+    <script>
+        $('.ui.accordion').accordion({
+            exclusive: false
+        });
+        $('.dimmable').dimmer({
+            on: 'hover'
+        });
+    </script>
 </body>
 
 </html>

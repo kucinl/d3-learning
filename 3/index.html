@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" >
+    <script type="text/javascript" src="../lib/d3/d3.min.js" ></script>
+    <style type="text/css">
+        .state {
+            fill: gray;
+        }
+
+    </style>
+</head>
+
+<body>
+    <script src="../lib/d3-queue/d3-queue.js" ></script>
+
+    <script>
+        var width = 960,
+            height = 500;
+        var points;
+        var gpoints;
+        var state;
+		var zoom = d3.behavior.zoom()
+					.scaleExtent([0.01, 100000])
+					.on("zoom", zoomed);
+		function zoomed() {
+                var x = d3.event.translate[0];
+                var y = d3.event.translate[1];
+                projection.translate([x,y]);
+                projection.scale( d3.event.scale*20000);
+              d3.selectAll(".line").attr("d", lineFunction(points));
+              gpoints.attr('cx', lineFunction.x())
+          .attr('cy', lineFunction.y())
+          state.attr("d",path);
+         
+		}
+        // 设置svg属性，并添加第一个孩子g
+        var svg = d3.select("body").append("svg").call(zoom)
+                        .attr("width", width)
+                        .attr("height", height);
+        var groups = svg.append("g").attr("class", "states");
+        var g = svg.append("g").attr("class", "citys");
+
+        // 定义地图的投影
+        var projection = d3.geo.mercator()
+      .center([119.5,28.5])
+                            .scale(20000)
+                            .translate([0,0]);
+
+        // 定义地理路径生成器
+        var path = d3.geo.path()
+                    .projection(projection);
+var color = d3.scale.category20();
+
+      var lineFunction = d3.svg.line()
+            .x(function(d) {
+                return projection([d.aLongitude,d.aLatitude])[0];
+            })
+            .y(function(d) {
+                return projection([d.aLongitude,d.aLatitude])[1];
+            })
+            .interpolate("linear");  
+        d3.queue()
+            .defer(d3.json, "wz.json")
+            .defer(d3.json, "phone.json")
+     //       .defer(d3.csv, "cities.csv")
+            .await(ready);
+
+        
+        function ready(error, states,phones){
+              points = phones;
+               var path1 = g.append("path")
+                .attr('class', 'line')
+                .attr("d", lineFunction(phones))
+                .attr("stroke", "blue")
+                .attr("stroke-width", 1)
+                .attr("fill", "none");
+                gpoints = g.selectAll('point')
+          .data(phones)
+          .enter()
+          .append('g')
+          .append('circle')
+          .attr('class', 'point')
+          .attr('cx', lineFunction.x())
+          .attr('cy', lineFunction.y())
+          .attr('fill', "red")
+          .attr("opacity", .5)
+          .attr('r', 5)
+            state = groups.selectAll("path")
+                .data( states.features )        // 对每一个数据绑定一个path
+                .enter()
+                .append("path")        // 对每一个数据绑定一个path
+                    .attr("d", path)
+                    .attr("class", "state")
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 1)
+                    .style("fill", function(d, i){
+                    //     c = cities;
+                   /*     var temp_n=1.2;
+                        for (var j = 0; j < productivity.length; j++){
+                            if (d.properties.name == productivity[j].state){
+                                temp_n = productivity[j].value;
+                                break;
+                            }
+                        }
+                        var m = compute(temp_n); 
+                        return computeColor(m);*/
+                        return color(i);
+                    });
+        } // function ready END!
+
+    </script>
+    
+</body>
+</html>

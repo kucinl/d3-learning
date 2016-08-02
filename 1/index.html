@@ -23,7 +23,7 @@
 		function zoomed() {
 			d3.select(".citys").attr("transform", 
 				"translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-            d3.select(".states").attr("transform", 
+            d3.selectAll(".state").attr("transform", 
 				"translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 		}
         // 设置svg属性，并添加第一个孩子g
@@ -36,7 +36,7 @@
         // 定义地图的投影
         var projection = d3.geo.mercator()
       .center([120.64653,27.99529])
-                            .scale(15000)
+                            .scale(20000)
                             .translate([width / 2, height / 2]);
 
         // 定义地理路径生成器
@@ -101,6 +101,8 @@ var color = d3.scale.category20();
                 .append("path")        // 对每一个数据绑定一个path
                     .attr("d", path)
                     .attr("class", "state")
+                    .attr("stroke", "black")
+                    .attr("stroke-width", 1)
                     .style("fill", function(d, i){
                     //     c = cities;
                    /*     var temp_n=1.2;
@@ -113,14 +115,16 @@ var color = d3.scale.category20();
                         var m = compute(temp_n); 
                         return computeColor(m);*/
                         return color(i);
-                    }).on("mouseover",function(d,i){
+                    })
+                    
+                    /*.on("mouseover",function(d,i){
                     d3.select(this)
                        .style("fill","black");
                 })
                 .on("mouseout",function(d,i){
                     d3.select(this)
                        .style("fill",color(i));
-                });
+                })*/;
         
         } // function ready END!
 

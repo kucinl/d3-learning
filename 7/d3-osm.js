@@ -66,7 +66,8 @@
       }
 
       for (var key in way.tags) {
-        if (~this._options.areaTags.indexOf(key)) {
+        if (this._options.areaTags.indexOf(key)>=0) {
+          console.log(key)
           return true;
         }
       }

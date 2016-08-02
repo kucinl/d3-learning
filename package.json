@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "lite-server --config=liteserver-config.json"
+    "start": "lite-server",
+    "forever": "forever start node_modules/lite-server/bin/lite-server",
+    "forever-stop": "forever stop node_modules/lite-server/bin/lite-server"
   },
   "author": "kucin",
   "license": "ISC",
